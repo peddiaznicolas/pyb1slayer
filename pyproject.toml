@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyb1slayer"
-version = "0.1.2.dev3"
+version = "0.1.2.dev4"
 description = "A clean and fluent Python client for SAP Business One Service Layer"
 readme = "README.md"
 license = {text = "MIT"}

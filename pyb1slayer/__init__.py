@@ -3,7 +3,7 @@ pyb1slayer - A clean and fluent Python client for SAP Business One Service Layer
 Created by [peddiaznicolas].
 """
 
-__version__ = "0.1.2.dev3"
+__version__ = "0.1.2.dev4"
 
 # Core classes (lo único que el usuario necesita instanciar)
 from .connection import SLConnection
