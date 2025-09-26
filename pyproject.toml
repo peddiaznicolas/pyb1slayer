@@ -31,10 +31,10 @@ dependencies = [
 requires-python = ">=3.9"
 
 [project.urls]
-Homepage = "https://github.com/peddiaznicolas/py-b1s-layer"
-Repository = "https://github.com/peddiaznicolas/py-b1s-layer"
-Documentation = "https://github.com/peddiaznicolas/py-b1s-layer#readme"
-Changelog = "https://github.com/peddiaznicolas/py-b1s-layer/releases"
+Homepage = "https://github.com/peddiaznicolas/pyb1slayer"
+Repository = "https://github.com/peddiaznicolas/pyb1slayer"
+Documentation = "https://github.com/peddiaznicolas/pyb1slayer#readme"
+Changelog = "https://github.com/peddiaznicolas/pyb1slayer/releases"
 
 [tool.setuptools.packages.find]
 where = ["."]
