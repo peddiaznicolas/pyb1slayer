@@ -99,6 +99,13 @@ class SLConnection:
             headers["Cookie"] = f"B1SESSION={self._session_id}; ROUTEID={self._route_id}"
         return headers
 
+    async def _ensure_session(self):
+        """Ensures the HTTP client is open and session is active."""
+        if self._client is None:
+            await self.open()
+        if self._session_id is None:
+            await self.login()
+
     async def login(self):
         """
         Performs manual login to Service Layer.
@@ -166,8 +173,7 @@ class SLConnection:
         """
         Executes an HTTP request with automatic session renewal and retry logic.
         """
-        if self._client is None:
-            await self.open()
+        await self._ensure_session()
 
         full_url = urljoin(self._base_url, path.lstrip("/"))
         merged_headers = {**self._build_headers(), **(headers or {})}
@@ -219,16 +225,19 @@ class SLConnection:
 
     async def ping(self) -> SLPingResponse:
         """Pings the load balancer (available since 9.3 PL10)."""
+        await self._ensure_session()
         from .ping import ping_load_balancer
         return await ping_load_balancer(self._client, self._base_url)
 
     async def ping_node(self, node_id: Optional[int] = None) -> SLPingResponse:
         """Pings a specific Service Layer node."""
+        await self._ensure_session()
         from .ping import ping_node
         return await ping_node(self._client, self._base_url, node_id)
 
     async def post_attachment(self, file_path: str) -> SLAttachment:
         """Uploads a file as an attachment (must exist on Service Layer server filesystem)."""
+        await self._ensure_session()
         from .attachments import build_attachment_payload_from_path
         payload = build_attachment_payload_from_path(file_path)
         data = await self._make_request("POST", "Attachments2", json=payload)
@@ -236,6 +245,7 @@ class SLConnection:
 
     async def get_attachment(self, attachment_entry: int, filename: Optional[str] = None) -> bytes:
         """Downloads an attachment as raw bytes."""
+        await self._ensure_session()
         url = f"Attachments2({attachment_entry})/$value"
         if filename:
             url += f"?filename='{filename}'"
@@ -247,6 +257,7 @@ class SLConnection:
         Sends multiple operations in a single batch request.
         Note: Full multipart response parsing is not yet implemented.
         """
+        await self._ensure_session()
         batch_body, boundary = build_batch_request(requests, self._base_url)
         headers = {
             "Content-Type": f"multipart/mixed; boundary={boundary}",
